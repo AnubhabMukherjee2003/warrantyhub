@@ -1,10 +1,20 @@
 package com.anubhab.warrantyhub.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class ServiceRequestCreateRequest {
 
+    @NotNull
     private Long purchaseId;
+
+    @NotBlank
     private String issueCategory;
+
+    @NotBlank
     private String issueDescription;
+
+    @NotBlank
     private String priority;
 
     public Long getPurchaseId() {
