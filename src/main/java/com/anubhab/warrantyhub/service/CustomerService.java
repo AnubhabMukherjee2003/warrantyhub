@@ -5,6 +5,8 @@ import com.anubhab.warrantyhub.dto.CustomerResponse;
 import com.anubhab.warrantyhub.exception.CustomerNotFoundException;
 import com.anubhab.warrantyhub.model.Customer;
 import com.anubhab.warrantyhub.repository.CustomerRepository;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -30,6 +34,7 @@ public class CustomerService {
         customer.setName(request.getName());
         customer.setEmail(request.getEmail());
         customer.setPhone(request.getPhone());
+        customer.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return toResponse(customerRepository.save(customer));
     }
@@ -42,6 +47,7 @@ public class CustomerService {
         customer.setName(request.getName());
         customer.setEmail(request.getEmail());
         customer.setPhone(request.getPhone());
+        customer.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return toResponse(customerRepository.save(customer));
     }
@@ -63,4 +69,3 @@ public class CustomerService {
         );
     }
 }
-

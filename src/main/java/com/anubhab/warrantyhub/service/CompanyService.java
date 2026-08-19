@@ -4,22 +4,24 @@ import com.anubhab.warrantyhub.dto.CompanyRequest;
 import com.anubhab.warrantyhub.dto.CompanyResponse;
 import com.anubhab.warrantyhub.model.Company;
 import com.anubhab.warrantyhub.repository.CompanyRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
-
-    public CompanyService(CompanyRepository companyRepository) {
+    private final PasswordEncoder passwordEncoder;
+    public CompanyService(CompanyRepository companyRepository, PasswordEncoder passwordEncoder) {
         this.companyRepository = companyRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public CompanyResponse createCompany(CompanyRequest request) {
         Company company = new Company();
         company.setCompanyName(request.getCompanyName());
         company.setEmail(request.getEmail());
-        company.setPassword(request.getPassword());
+        company.setPassword(passwordEncoder.encode(request.getPassword()));
         company.setPhone(request.getPhone());
         company.setStatus(request.getStatus());
 
