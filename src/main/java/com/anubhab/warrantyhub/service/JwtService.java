@@ -12,6 +12,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
+        
         private static final String SECRET = "WarrantyHubSecretKeyForJwtAuthentication123456789";
 
         private final SecretKey secretKey = Keys.hmacShaKeyFor(
