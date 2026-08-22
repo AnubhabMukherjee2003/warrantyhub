@@ -37,23 +37,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(
+    public AuthenticationManager authenticationManager(
             CustomUserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
 
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-
         provider.setPasswordEncoder(passwordEncoder);
 
-        return provider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
-
-        return configuration.getAuthenticationManager();
+        return new org.springframework.security.authentication.ProviderManager(provider);
     }
 
     @Bean
@@ -74,14 +65,22 @@ public class SecurityConfig {
                     );
                 })
             )
+            .headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.sameOrigin())
+            )
             .authorizeHttpRequests(auth -> auth
         .requestMatchers("/api/auth/login").permitAll()
+        .requestMatchers("/api/health").permitAll()
+        .requestMatchers("/h2-console/**").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/customers").permitAll()
 
-        .requestMatchers(HttpMethod.POST, "/api/customers")
-        .permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/companies").permitAll()
 
-        .requestMatchers(HttpMethod.POST, "/api/companies")
-        .permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/customers/me/products")
+        .hasRole("CUSTOMER")
+
+        .requestMatchers(HttpMethod.GET, "/api/company/service-requests")
+        .hasRole("COMPANY")
 
         .requestMatchers(HttpMethod.POST, "/api/purchases")
         .hasRole("COMPANY")
@@ -97,7 +96,7 @@ public class SecurityConfig {
         .requestMatchers(
                 HttpMethod.GET,
                 "/api/service-requests/*/history")
-        .hasRole("CUSTOMER")
+        .hasAnyRole("CUSTOMER", "COMPANY")
 
         .requestMatchers(
                 HttpMethod.PUT,

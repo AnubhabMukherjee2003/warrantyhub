@@ -10,6 +10,6 @@ public class HealthController {
 
     @GetMapping("/health")
     public String health() {
-        return "WarrantyHub is running ss";
+        return "Warrantyhub is running";
     }
 }

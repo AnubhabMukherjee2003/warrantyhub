@@ -8,8 +8,6 @@ import java.time.LocalDate;
 
 public class PurchaseRequest {
 
-    @NotNull
-    private Long companyId;
 
     @NotBlank
     private String customerName;
@@ -48,13 +46,6 @@ public class PurchaseRequest {
     @NotBlank
     private String invoiceNumber;
 
-    public Long getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
 
     public String getCustomerName() {
         return customerName;

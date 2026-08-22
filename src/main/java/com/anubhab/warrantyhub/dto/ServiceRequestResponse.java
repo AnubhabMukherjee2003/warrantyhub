@@ -8,19 +8,21 @@ public class ServiceRequestResponse {
     private Long purchaseId;
     private String issueCategory;
     private String issueDescription;
-    private String priority;
+    private String photoUrl;
+    private String videoUrl;
     private String currentStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public ServiceRequestResponse(Long requestId, Long purchaseId, String issueCategory,
-                                  String issueDescription, String priority, String currentStatus,
+                                  String issueDescription, String photoUrl, String videoUrl, String currentStatus,
                                   LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.requestId = requestId;
         this.purchaseId = purchaseId;
         this.issueCategory = issueCategory;
         this.issueDescription = issueDescription;
-        this.priority = priority;
+        this.photoUrl = photoUrl;
+        this.videoUrl = videoUrl;
         this.currentStatus = currentStatus;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -42,8 +44,12 @@ public class ServiceRequestResponse {
         return issueDescription;
     }
 
-    public String getPriority() {
-        return priority;
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
     public String getCurrentStatus() {

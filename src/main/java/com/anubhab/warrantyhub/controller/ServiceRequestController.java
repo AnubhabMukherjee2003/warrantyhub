@@ -3,6 +3,7 @@ package com.anubhab.warrantyhub.controller;
 import com.anubhab.warrantyhub.dto.ServiceRequestCreateRequest;
 import com.anubhab.warrantyhub.dto.ServiceRequestResponse;
 import com.anubhab.warrantyhub.dto.StatusChangeRequest;
+import com.anubhab.warrantyhub.dto.ServiceRequestHistoryResponse;
 import com.anubhab.warrantyhub.dto.StatusHistoryResponse;
 import com.anubhab.warrantyhub.service.ServiceRequestService;
 import jakarta.validation.Valid;
@@ -46,7 +47,7 @@ public class ServiceRequestController {
     }
 
     @GetMapping("/{id}/history")
-    public ResponseEntity<List<StatusHistoryResponse>> getStatusHistory(@PathVariable Long id) {
+    public ResponseEntity<ServiceRequestHistoryResponse> getStatusHistory(@PathVariable Long id) {
         return ResponseEntity.ok(serviceRequestService.getStatusHistory(id));
     }
 }

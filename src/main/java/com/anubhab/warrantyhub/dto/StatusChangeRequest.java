@@ -10,9 +10,6 @@ public class StatusChangeRequest {
     @NotBlank
     private String remarks;
 
-    @NotBlank
-    private String changedBy;
-
     public String getStatus() {
         return status;
     }
@@ -27,13 +24,5 @@ public class StatusChangeRequest {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public String getChangedBy() {
-        return changedBy;
-    }
-
-    public void setChangedBy(String changedBy) {
-        this.changedBy = changedBy;
     }
 }

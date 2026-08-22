@@ -11,6 +11,7 @@ public class Company {
     private Long companyId;
 
     private String companyName;
+    @Column(unique = true)
     private String email;
     private String password;
     private String phone;

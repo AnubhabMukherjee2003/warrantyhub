@@ -14,8 +14,9 @@ public class ServiceRequestCreateRequest {
     @NotBlank
     private String issueDescription;
 
-    @NotBlank
-    private String priority;
+    private String photoUrl;
+
+    private String videoUrl;
 
     public Long getPurchaseId() {
         return purchaseId;
@@ -41,11 +42,19 @@ public class ServiceRequestCreateRequest {
         this.issueDescription = issueDescription;
     }
 
-    public String getPriority() {
-        return priority;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 }

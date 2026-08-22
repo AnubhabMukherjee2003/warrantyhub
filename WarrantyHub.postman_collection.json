@@ -2,32 +2,15 @@
   "info": {
     "_postman_id": "f62a5fd2-5e46-4a4a-85c3-0f0b6af1b001",
     "name": "WarrantyHub API",
-    "description": "Postman collection for the WarrantyHub Spring Boot application.",
+    "description": "Postman collection for the WarrantyHub Spring Boot application with complete security and workflow testing.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Health",
+      "name": "1. Setup & Company Roles",
       "item": [
         {
-          "name": "Get Health",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/health",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "health"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Customers",
-      "item": [
-        {
-          "name": "Create Customer",
+          "name": "1. Create Company",
           "request": {
             "method": "POST",
             "header": [
@@ -35,72 +18,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Asha\",\n  \"email\": \"asha@example.com\",\n  \"phone\": \"8888888888\",\n  \"password\": \"secret123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/customers",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "customers"]
-            }
-          }
-        },
-        {
-          "name": "Get Customer By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "customers", "{{customerId}}"]
-            }
-          }
-        },
-        {
-          "name": "Update Customer",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Asha Updated\",\n  \"email\": \"asha.updated@example.com\",\n  \"phone\": \"7777777777\",\n  \"password\": \"secret123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "customers", "{{customerId}}"]
-            }
-          }
-        },
-        {
-          "name": "Delete Customer",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "customers", "{{customerId}}"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Companies",
-      "item": [
-        {
-          "name": "Create Company",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"companyName\": \"Acme Corp\",\n  \"email\": \"acme@example.com\",\n  \"password\": \"secret123\",\n  \"phone\": \"9999999999\",\n  \"status\": \"ACTIVE\"\n}"
+              "raw": "{\n  \"companyName\": \"Acme Corp\",\n  \"email\": \"acme@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"9999999999\",\n  \"status\": \"ACTIVE\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/companies",
@@ -108,14 +26,22 @@
               "path": ["api", "companies"]
             }
           }
-        }
-      ]
-    },
-    {
-      "name": "Purchases",
-      "item": [
+        },
         {
-          "name": "Create Purchase Bundle",
+          "name": "2. Login Company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.environment.set(\"companyToken\", pm.response.text());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -123,7 +49,31 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"companyId\": 1,\n  \"customerName\": \"Asha\",\n  \"customerEmail\": \"asha@example.com\",\n  \"customerPhone\": \"8888888888\",\n  \"customerPassword\": \"secret123\",\n  \"productName\": \"SuperPhone\",\n  \"productCategory\": \"Mobile\",\n  \"modelNumber\": \"SP-100\",\n  \"warrantyPeriod\": 12,\n  \"warrantyUnit\": \"MONTHS\",\n  \"warrantyTerms\": \"Standard coverage\",\n  \"purchaseDate\": \"2026-08-16\",\n  \"invoiceNumber\": \"INV-1001\"\n}"
+              "raw": "{\n  \"email\": \"acme@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Purchase Bundle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{companyToken}}", "type": "string" }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Asha\",\n  \"customerEmail\": \"asha@example.com\",\n  \"customerPhone\": \"8888888888\",\n  \"customerPassword\": \"password123\",\n  \"productName\": \"SuperPhone\",\n  \"productCategory\": \"Mobile\",\n  \"modelNumber\": \"SP-100\",\n  \"warrantyPeriod\": 12,\n  \"warrantyUnit\": \"MONTHS\",\n  \"warrantyTerms\": \"Standard coverage\",\n  \"purchaseDate\": \"2026-08-16\",\n  \"invoiceNumber\": \"INV-1001\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/purchases",
@@ -135,10 +85,23 @@
       ]
     },
     {
-      "name": "Service Requests",
+      "name": "2. Customer Roles",
       "item": [
         {
-          "name": "Create Service Request",
+          "name": "4. Login Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.environment.set(\"customerToken\", pm.response.text());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -146,7 +109,67 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"purchaseId\": 1,\n  \"issueCategory\": \"Battery\",\n  \"issueDescription\": \"Battery drains quickly\",\n  \"priority\": \"HIGH\"\n}"
+              "raw": "{\n  \"email\": \"asha@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "5. Get Customer Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/me/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "me", "products"]
+            }
+          }
+        },
+        {
+          "name": "6. Get Customer Service Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/service-requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "service-requests"]
+            }
+          }
+        },
+        {
+          "name": "7. Create Service Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"purchaseId\": 1,\n  \"issueCategory\": \"Battery\",\n  \"issueDescription\": \"Battery drains quickly\",\n  \"photoUrl\": \"http://example.com/photo.jpg\",\n  \"videoUrl\": \"http://example.com/video.mp4\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/service-requests",
@@ -154,46 +177,81 @@
               "path": ["api", "service-requests"]
             }
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "3. Service Operations",
+      "item": [
         {
-          "name": "Get Service Request By Id",
+          "name": "7. Get Company Service Requests",
           "request": {
             "method": "GET",
             "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{companyToken}}", "type": "string" }
+              ]
+            },
             "url": {
-              "raw": "{{baseUrl}}/api/service-requests/{{requestId}}",
+              "raw": "{{baseUrl}}/api/company/service-requests",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "service-requests", "{{requestId}}"]
+              "path": ["api", "company", "service-requests"]
             }
           }
         },
         {
-          "name": "Change Service Request Status",
+          "name": "8. Update Service Request Status (Company)",
           "request": {
             "method": "PUT",
             "header": [
               { "key": "Content-Type", "value": "application/json" }
             ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{companyToken}}", "type": "string" }
+              ]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"remarks\": \"Technician assigned\",\n  \"changedBy\": \"COMPANY\"\n}"
+              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"remarks\": \"Technician assigned\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/service-requests/{{requestId}}/status",
+              "raw": "{{baseUrl}}/api/service-requests/1/status",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "service-requests", "{{requestId}}", "status"]
+              "path": ["api", "service-requests", "1", "status"]
             }
           }
         },
         {
-          "name": "Get Service Request History",
+          "name": "9. Get Service Request History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/service-requests/1/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "service-requests", "1", "history"]
+            }
+          }
+        },
+        {
+          "name": "10. Get Health",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/service-requests/{{requestId}}/history",
+              "raw": "{{baseUrl}}/api/health",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "service-requests", "{{requestId}}", "history"]
+              "path": ["api", "health"]
             }
           }
         }
@@ -204,14 +262,6 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:8080"
-    },
-    {
-      "key": "customerId",
-      "value": "1"
-    },
-    {
-      "key": "requestId",
-      "value": "1"
     }
   ]
 }

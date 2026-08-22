@@ -18,6 +18,9 @@ public class CompanyService {
     }
 
     public CompanyResponse createCompany(CompanyRequest request) {
+        if (companyRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email is already in use.");
+        }
         Company company = new Company();
         company.setCompanyName(request.getCompanyName());
         company.setEmail(request.getEmail());

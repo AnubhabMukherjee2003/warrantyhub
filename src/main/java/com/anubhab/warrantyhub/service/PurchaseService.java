@@ -13,6 +13,7 @@ import com.anubhab.warrantyhub.repository.CustomerRepository;
 import com.anubhab.warrantyhub.repository.ProductRepository;
 import com.anubhab.warrantyhub.repository.PurchaseRepository;
 import com.anubhab.warrantyhub.repository.WarrantyRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,29 +25,32 @@ public class PurchaseService {
     private final ProductRepository productRepository;
     private final WarrantyRepository warrantyRepository;
     private final PurchaseRepository purchaseRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public PurchaseService(CompanyRepository companyRepository,
                            CustomerRepository customerRepository,
                            ProductRepository productRepository,
                            WarrantyRepository warrantyRepository,
-                           PurchaseRepository purchaseRepository) {
+                           PurchaseRepository purchaseRepository,
+                           PasswordEncoder passwordEncoder) {
         this.companyRepository = companyRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.warrantyRepository = warrantyRepository;
         this.purchaseRepository = purchaseRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
-    public PurchaseResponse createPurchase(PurchaseRequest request) {
-        Company company = companyRepository.findById(request.getCompanyId())
-                .orElseThrow(() -> new CompanyNotFoundException(request.getCompanyId()));
+    public PurchaseResponse createPurchase(PurchaseRequest request, String companyEmail) {
+        Company company = companyRepository.findByEmail(companyEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
 
         Customer customer = new Customer();
         customer.setName(request.getCustomerName());
         customer.setEmail(request.getCustomerEmail());
         customer.setPhone(request.getCustomerPhone());
-        customer.setPassword(request.getCustomerPassword());
+        customer.setPassword(passwordEncoder.encode(request.getCustomerPassword()));
         Customer savedCustomer = customerRepository.save(customer);
 
         Product product = new Product();

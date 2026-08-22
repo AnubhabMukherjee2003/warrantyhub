@@ -19,9 +19,9 @@ public class ServiceRequest {
 
     private String issueDescription;
 
-    private String priority;
+    private String photoUrl;
 
-    private String currentStatus;
+    private String videoUrl;
 
     private LocalDateTime createdAt;
 
@@ -59,20 +59,20 @@ public class ServiceRequest {
         this.issueDescription = issueDescription;
     }
 
-    public String getPriority() {
-        return priority;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public LocalDateTime getCreatedAt() {
