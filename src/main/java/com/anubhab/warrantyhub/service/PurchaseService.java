@@ -46,12 +46,15 @@ public class PurchaseService {
         Company company = companyRepository.findByEmail(companyEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Company not found"));
 
-        Customer customer = new Customer();
-        customer.setName(request.getCustomerName());
-        customer.setEmail(request.getCustomerEmail());
-        customer.setPhone(request.getCustomerPhone());
-        customer.setPassword(passwordEncoder.encode(request.getCustomerPassword()));
-        Customer savedCustomer = customerRepository.save(customer);
+        Customer savedCustomer = customerRepository.findByEmail(request.getCustomerEmail())
+                .orElseGet(() -> {
+                    Customer customer = new Customer();
+                    customer.setName(request.getCustomerName());
+                    customer.setEmail(request.getCustomerEmail());
+                    customer.setPhone(request.getCustomerPhone());
+                    customer.setPassword(passwordEncoder.encode(request.getCustomerPassword()));
+                    return customerRepository.save(customer);
+                });
 
         Product product = new Product();
         product.setCompany(company);
