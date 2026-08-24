@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.anubhab.warrantyhub.security.JwtAuthenticationFilter;
 import com.anubhab.warrantyhub.service.CustomUserDetailsService;
-import org.springframework.http.HttpMethod;
 
 @Configuration
 public class SecurityConfig {
